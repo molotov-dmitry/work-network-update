@@ -38,7 +38,18 @@ update_conn_value()
         if nmcli conn modify "$conn" "$field" "$value"
         then
             echo "Updated '$conn' field '$field': '$oldvalue' -> '$value'"
-        fi 
+            configured=1
+        fi
+    fi
+}
+
+reconnect()
+{
+    local conn="$1"
+    
+    if [[ -n "$(LC_ALL=C nmcli --fields=TYPE,STATE device status | tail -n+2 | grep '^ethernet [ ]*connected[ ]*$')" && $configured -ne 0 ]]
+    then
+        nmcli conn up "${conn}" >/dev/null 2>/dev/null
     fi
 }
 
@@ -55,6 +66,8 @@ declare -A STATIC_ADDRESSES
 
 STATIC_ADDRESSES['ac:22:0b:27:c5:ec']='' # 91
 STATIC_ADDRESSES['b4:2e:99:be:df:69']='' # 52
+
+configured=0
 
 #### DHCP connection ===========================================================
 
@@ -81,6 +94,8 @@ else
         connection.permissions "user:${USER}" \
         connection.autoconnect-priority 30 2>/dev/null \
     || echo "Failed to add network connection" >&2
+    
+    configured=1
 fi
 
 #### STATIC connection =========================================================
@@ -118,12 +133,19 @@ then
                 connection.permissions "user:${USER}" \
                 connection.autoconnect-priority 30 2>/dev/null \
             || echo "Failed to add network connection" >&2
+            
+            configured=1
         fi
+        
+        reconnect "${CONN_NAME_STATIC}"
     else
         if nmcli conn show "${CONN_NAME_STATIC}" >/dev/null 2>/dev/null
         then
             nmcli conn del "${CONN_NAME_STATIC}"
+            configured=1
         fi
+
+        reconnect "${CONN_NAME_DHCP}"
     fi
 fi
 
