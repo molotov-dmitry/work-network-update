@@ -58,7 +58,7 @@ STATIC_ADDRESSES['b4:2e:99:be:df:69']='' # 52
 
 #### DHCP connection ===========================================================
 
-if nmcli connection show "${CONN_NAME_DHCP}" >/dev/null 2>/dev/null
+if nmcli conn show "${CONN_NAME_DHCP}" >/dev/null 2>/dev/null
 then
     update_conn_value "${CONN_NAME_DHCP}" ipv4.method auto
     update_conn_value "${CONN_NAME_DHCP}" ipv4.dns "${DNS_SERVERS}"
@@ -91,7 +91,7 @@ then
 
     if [[ -n "$addr" ]]
     then
-        if nmcli connection show "${CONN_NAME_STATIC}" >/dev/null 2>/dev/null
+        if nmcli conn show "${CONN_NAME_STATIC}" >/dev/null 2>/dev/null
         then
             update_conn_value "${CONN_NAME_STATIC}" ipv4.method manual
             update_conn_value "${CONN_NAME_STATIC}" ipv4.addresses "${addr}/${MASK}"
