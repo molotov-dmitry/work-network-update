@@ -119,6 +119,11 @@ then
                 connection.autoconnect-priority 30 2>/dev/null \
             || echo "Failed to add network connection" >&2
         fi
+    else
+        if nmcli conn show "${CONN_NAME_STATIC}" >/dev/null 2>/dev/null
+        then
+            nmcli conn del "${CONN_NAME_STATIC}"
+        fi
     fi
 fi
 
