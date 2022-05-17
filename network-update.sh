@@ -49,12 +49,12 @@ readonly DNS_SERVERS='172.16.56.14,172.16.56.10'
 readonly DNS_DOMAIN='rczifort.local'
 
 readonly MASK='24'
-readonly GATEWAY='172.16.8.253'
+readonly GATEWAY='10.0.0.1'
 
 declare -A STATIC_ADDRESSES
 
-STATIC_ADDRESSES['ac:22:0b:27:c5:ec']="172.16.8.91"
-STATIC_ADDRESSES['b4:2e:99:be:df:69']="172.16.8.52"
+STATIC_ADDRESSES['ac:22:0b:27:c5:ec']='' # 91
+STATIC_ADDRESSES['b4:2e:99:be:df:69']='' # 52
 
 #### DHCP connection ===========================================================
 
